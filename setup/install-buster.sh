@@ -1,4 +1,5 @@
 #!/bin/bash
+set -ex
 
 # This installation script works on Ubuntu 14.04 and 16.04
 # Run as root!
