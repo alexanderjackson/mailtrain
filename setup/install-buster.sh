@@ -262,7 +262,8 @@ server {
         }
 }
 EOT
+systemctl restart nginx
 
 echo $MYSQL_ROOT_PASSWORD > ~/mysql_root_password
 echo "MySQL root password: $MYSQL_ROOT_PASSWORD"
-echo "Success! Open http://$HOSTNAME/ and log in as admin:test";
+echo "Success! Open https://$HOSTNAME/ and log in as admin:test"
