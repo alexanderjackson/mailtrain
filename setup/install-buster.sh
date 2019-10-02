@@ -1,7 +1,7 @@
 #!/bin/bash
 set -ex
 
-# This installation script works on Ubuntu 14.04 and 16.04
+# This installation script works on Debian 10 (Buster)
 # Run as root!
 
 if [[ $EUID -ne 0 ]]; then
