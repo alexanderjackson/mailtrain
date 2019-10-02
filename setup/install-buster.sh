@@ -17,7 +17,7 @@ debconf-set-selections <<< 'mariadb-server-5.5 mysql-server/root_password passwo
 debconf-set-selections <<< 'mariadb-server-5.5 mysql-server/root_password_again password $MYSQL_ROOT_PASSWORD'
 
 apt-get update
-apt-get -q -y install mariadb-server pwgen nodejs imagemagick git ufw build-essential dnsutils python software-properties-common redis-server
+apt-get -q -y install mariadb-server pwgen nodejs npm imagemagick git ufw build-essential dnsutils python software-properties-common redis-server
 apt-get clean
 
 MYSQL_ROOT_PASSWORD=`pwgen 12 -1`
