@@ -17,7 +17,7 @@ debconf-set-selections <<< 'mariadb-server-5.5 mysql-server/root_password passwo
 debconf-set-selections <<< 'mariadb-server-5.5 mysql-server/root_password_again password $MYSQL_ROOT_PASSWORD'
 
 apt-get update
-apt-get -q -y install mariadb-server pwgen nodejs npm imagemagick git ufw build-essential dnsutils python software-properties-common redis-server
+apt-get -q -y install mariadb-server pwgen nodejs npm imagemagick git ufw build-essential dnsutils python software-properties-common redis-server ssl-cert
 apt-get clean
 
 MYSQL_ROOT_PASSWORD=`pwgen 12 -1`
@@ -82,7 +82,7 @@ group="mailtrain"
 [log]
 level="error"
 [www]
-port=80
+port=3000
 secret="`pwgen -1`"
 [mysql]
 password="$MYSQL_PASSWORD"
@@ -230,6 +230,38 @@ fi
 # Start the service
 service zone-mta start
 service mailtrain start
+
+# Setup NGINX proxy
+cat > /etc/nginx/sites-enabled/default <<'EOT'
+server {
+        listen 80;
+        listen 443 ssl http2;
+
+        server_name "";
+
+        # force https-redirects
+        if ($scheme = http) {
+            return 301 https://$http_host$request_uri;
+        }
+
+        ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+        ssl_certificate /etc/ssl/certs/ssl-cert-snakeoil.pem;
+        ssl_certificate_key /etc/ssl/private/ssl-cert-snakeoil.key;
+
+        location / {
+          proxy_set_header X-Real-IP $remote_addr;
+          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+          proxy_set_header HOST $http_host;
+          proxy_set_header X-NginX-Proxy true;
+          proxy_pass http://127.0.0.1:3000;
+          proxy_redirect off;
+        }
+
+        location /.well-known/acme-challenge {
+          proxy_pass http://127.0.0.1:54321;
+        }
+}
+EOT
 
 echo $MYSQL_ROOT_PASSWORD > ~/mysql_root_password
 echo "MySQL root password: $MYSQL_ROOT_PASSWORD"
