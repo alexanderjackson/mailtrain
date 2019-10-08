@@ -144,9 +144,10 @@ if (typeof window.mailtrain !== 'object') {
                     form.style.display = 'none';
                     container.scrollIntoView();
                     cookie.create('has-subscribed-to-' + data.cid, 1);
-                }, function(j) {
+                }, function() {
                     isSending = false;
-                    setStatus('error', j.error);
+                    setStatus('confirm-notice');
+                    container.scrollIntoView();
                 });
             });
         };
