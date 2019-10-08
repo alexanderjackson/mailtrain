@@ -143,10 +143,10 @@ if (typeof window.mailtrain !== 'object') {
                     setStatus('confirm-notice');
                     form.style.display = 'none';
                     container.scrollIntoView();
-                    cookie.create('has-subscribed-to-' + data.cid, 1);
                 }, function() {
                     isSending = false;
-                    setStatus('confirm-notice');
+                    setStatus('already-subscribed');
+                    form.style.display = 'none';
                     container.scrollIntoView();
                 });
             });
@@ -162,8 +162,8 @@ if (typeof window.mailtrain !== 'object') {
         });
 
         document.addEventListener('DOMContentLoaded', function() {
-            loadScript('window.moment', 'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.12.0/moment.min.js', function(existed) {
-                loadScript('window.moment.tz', 'https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.3/moment-timezone-with-data.min.js', function(existed) {
+            loadScript('window.moment', 'https://www.syncwerk.de/cdn/moment.min.js', function(existed) {
+                loadScript('window.moment.tz', 'https://www.syncwerk.de/cdn/moment-timezone-with-data.min.js', function(existed) {
                     if (window.moment && window.moment.tz) {
                         forEach(document.body.querySelectorAll('div[data-mailtrain-subscription-widget] .tz-detect'), function(i, el) {
                             el.value = window.moment.tz.guess() || '';
